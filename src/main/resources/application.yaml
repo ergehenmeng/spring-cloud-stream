@@ -1,0 +1,27 @@
+server:
+  port: 8080
+spring:
+  cloud:
+    stream:
+      bindings:
+        producerChannel:
+          destination: outputTopic
+          content-type: application/json
+        consumerChannel:
+          destination: outputTopic
+          group: consumerGroup
+        tagConsumerChannel:
+          destination: outputTopic
+          group: tagConsumerGroup
+      rocketmq:
+        binder:
+          name-server: localhost:9876
+        bindings:
+          producerChannel:
+            producer:
+              group: outputGroup
+              sync: false
+          tagConsumerChannel:
+            consumer:
+              tags: tag1
+
