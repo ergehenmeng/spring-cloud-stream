@@ -1,7 +1,16 @@
 package com.eghm.cloud.stream;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.rocketmq.client.exception.MQBrokerException;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.common.message.MessageConst;
+import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.apache.rocketmq.spring.support.RocketMQHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -10,8 +19,10 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -19,10 +30,15 @@ import java.util.Map;
  * @date 2021/4/2
  */
 @RestController
+@Slf4j
 public class ProducerController {
 
     @Autowired
     private Producer producer;
+
+    @Autowired
+    private DefaultMQProducer mqProducer;
+
 
     @RequestMapping("/sendMsg")
     public String sendMsg() {
@@ -60,18 +76,32 @@ public class ProducerController {
     @StreamListener(Consumer.CONSUMER_CHANNEL)
     public void consumerChannel(@Payload Map<String, Object> map) {
         // 没有设置tags 默认能接收全部 包含所有条件的
-        System.out.println("consumerChannel:" + JSON.toJSONString(map));
+        log.info("consumerChannel [{}] 接收时间 [{}]", JSON.toJSONString(map), DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
     }
 
     @StreamListener(value = Consumer.CONSUMER_CHANNEL, condition = "headers['cond']=='school'")
     public void consumerChannelCondition(@Payload Map<String, Object> map) {
         // 只接收符合该条件的
-        System.out.println("consumerChannel condition :" + JSON.toJSONString(map));
+        log.info("consumerChannel condition [{}]", JSON.toJSONString(map));
     }
 
     @StreamListener(Consumer.TAG_CONSUMER_CHANNEL)
     public void consumerChannel2(@Payload Map<String, Object> map) {
         // 设置tags后 只能接收包含tags数据
-        System.out.println("tagConsumerChannel:" + JSON.toJSONString(map));
+        log.info("tagConsumerChannel: [{}]" , JSON.toJSONString(map));
+    }
+
+    @RequestMapping("/sendMsgDelay")
+    public String sendMsgDelay(@RequestParam("level") Integer level) throws InterruptedException, RemotingException, MQClientException, MQBrokerException {
+        // 1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("delay", "delay");
+        Message message = new Message();
+        message.setTopic("outputTopic");
+        message.setBody(JSON.toJSONString(map).getBytes());
+        message.setDelayTimeLevel(level);
+        mqProducer.send(message);
+        log.info("消息发送时间 [{}]", DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        return "OK";
     }
 }
