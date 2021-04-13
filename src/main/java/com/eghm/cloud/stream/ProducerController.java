@@ -18,9 +18,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.Map;
@@ -39,6 +37,11 @@ public class ProducerController {
     @Autowired
     private DefaultMQProducer mqProducer;
 
+    @GetMapping("/sendMsg/{path}/")
+    public String sendMsgPath(@PathVariable("path") Long path) {
+        log.info("path [{}]", path);
+        return "OK";
+    }
 
     @RequestMapping("/sendMsg")
     public String sendMsg() {
