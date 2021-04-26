@@ -22,11 +22,20 @@ public class Config {
     }
 
     @Bean
-    public static UserBean userBean() {
+    public UserBean userDefault() {
+        UserBean bean = new UserBean();
+        bean.setName("四哥");
+        bean.setAge(4);
+        log.error("[{}]", bean);
+        return bean;
+    }
+
+    @Bean
+    public static UserBean userBean(UserBean user) {
         UserBean bean = new UserBean();
         bean.setName("二哥");
         bean.setAge(2);
-        log.error("[{}]", bean);
+        log.error("[{}] -- [{}]", bean, user);
         return bean;
     }
 }
