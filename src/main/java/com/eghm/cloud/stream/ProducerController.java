@@ -13,6 +13,8 @@ import org.apache.rocketmq.common.message.MessageConst;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.apache.rocketmq.spring.support.RocketMQHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -29,6 +31,7 @@ import java.util.Map;
  */
 @RestController
 @Slf4j
+@RefreshScope
 public class ProducerController {
 
     @Autowired
@@ -36,6 +39,9 @@ public class ProducerController {
 
     @Autowired
     private DefaultMQProducer mqProducer;
+    
+    @Value("${school.year}")
+    private String year;
 
     @GetMapping("/sendMsg/{path}/")
     public String sendMsgPath(@PathVariable("path") Long path) {
@@ -106,5 +112,10 @@ public class ProducerController {
         mqProducer.send(message);
         log.info("消息发送时间 [{}]", DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
         return "OK";
+    }
+    
+    @RequestMapping("/refreshValue")
+    public String refreshValue() {
+        return year;
     }
 }

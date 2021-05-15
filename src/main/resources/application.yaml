@@ -1,3 +1,4 @@
+
 server:
   port: 8080
 spring:
@@ -24,4 +25,15 @@ spring:
           tagConsumerChannel:
             consumer:
               tags: tag1
+    nacos:
+      config:
+        extension-configs:
+          - dataId: data-sql.yaml
+            refresh: true
+          - dataId: data-school.yaml
+            refresh: true
+        file-extension: yaml
+        endpoint: localhost:8848
+  application:
+    name: cloud-stream
 
