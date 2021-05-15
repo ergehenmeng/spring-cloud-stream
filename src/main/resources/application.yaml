@@ -26,6 +26,7 @@ spring:
             consumer:
               tags: tag1
     nacos:
+      server-addr: localhost:8848
       config:
         extension-configs:
           - dataId: data-sql.yaml
@@ -33,7 +34,6 @@ spring:
           - dataId: data-school.yaml
             refresh: true
         file-extension: yaml
-        endpoint: localhost:8848
   application:
     name: cloud-stream
 
