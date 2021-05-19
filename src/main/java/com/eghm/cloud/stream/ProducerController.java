@@ -31,7 +31,6 @@ import java.util.Map;
  */
 @RestController
 @Slf4j
-@RefreshScope
 public class ProducerController {
 
     @Autowired
@@ -39,9 +38,6 @@ public class ProducerController {
 
     @Autowired
     private DefaultMQProducer mqProducer;
-    
-    @Value("${school.year}")
-    private String year;
 
     @GetMapping("/sendMsg/{path}/")
     public String sendMsgPath(@PathVariable("path") Long path) {
@@ -113,9 +109,5 @@ public class ProducerController {
         log.info("消息发送时间 [{}]", DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
         return "OK";
     }
-    
-    @RequestMapping("/refreshValue")
-    public String refreshValue() {
-        return year;
-    }
+   
 }

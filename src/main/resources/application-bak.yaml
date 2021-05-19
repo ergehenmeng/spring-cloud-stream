@@ -1,6 +1,4 @@
-
-server:
-  port: 8080
+## spring-cloud启动是bootstrap文件
 spring:
   cloud:
     stream:
@@ -25,15 +23,4 @@ spring:
           tagConsumerChannel:
             consumer:
               tags: tag1
-    nacos:
-      server-addr: localhost:8848
-      config:
-        extension-configs:
-          - dataId: data-sql.yaml
-            refresh: true
-          - dataId: data-school.yaml
-            refresh: true
-        file-extension: yaml
-  application:
-    name: cloud-stream
 
