@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import feign.RequestInterceptor;
+import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -70,5 +72,10 @@ public class Config {
         UserBean bean = new UserBean();
         bean.setAge(12);
         System.out.println(mapper.writeValueAsString(bean));
+    }
+    
+    @Bean
+    public RequestInterceptor requestInterceptor() {
+        return template -> System.out.println("FeignClient拦截器执行了...");
     }
 }

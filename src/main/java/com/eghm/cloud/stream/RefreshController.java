@@ -58,6 +58,15 @@ public class RefreshController implements ApplicationContextAware {
     public String requestOpenFeign() {
         return feignApi.getName("二哥很猛");
     }
+    @GetMapping("/getPathVariable")
+    public String getPathVariable() {
+        return feignApi.getPathVariable(9999L);
+    }
+    @GetMapping("/getBody")
+    public String getBody() {
+        return feignApi.getBody(new UserBean());
+    }
+    
     
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

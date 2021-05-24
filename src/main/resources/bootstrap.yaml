@@ -13,3 +13,7 @@ spring:
     name: springCloudStream
 server:
   port: 8090
+## 开启熔断
+feign:
+  hystrix:
+    enabled: true

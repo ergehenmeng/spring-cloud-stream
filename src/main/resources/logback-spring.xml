@@ -74,7 +74,7 @@
         </encoder>
     </appender>
 
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="info_rolling_file"/>
         <appender-ref ref="error_rolling_file"/>
         <appender-ref ref="console"/>
